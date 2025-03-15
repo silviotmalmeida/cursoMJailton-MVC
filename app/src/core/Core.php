@@ -29,7 +29,7 @@ class Core
         }
         // em caso de erro, lança exception
         catch (ArgumentCountError $e) {
-            throw new Exception("Erro na linha: " . $e->getLine() . " do arquivo " . $e->getFile() . " <br> O número de argumentos passados não corresponde ao esperado <br><br>");
+            throw new Exception("Erro na linha: " . $e->getLine() . " do arquivo " . $e->getFile() . " <br> O número de argumentos passado não corresponde ao esperado <br><br>");
         }
     }
 

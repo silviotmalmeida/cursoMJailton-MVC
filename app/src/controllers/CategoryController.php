@@ -3,7 +3,6 @@
 namespace src\controllers;
 
 use src\core\Controller;
-use src\core\Model;
 use src\models\CategoryModel;
 
 // controller para testes

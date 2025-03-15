@@ -57,21 +57,21 @@ class Service{
         if(!$erros){
             $dao = new Dao();            
             if($objeto->$campo){
-                $resultado =  $dao->editar(objToArray($objeto),$campo, $tabela);                
+                $resultado =  $dao->editar(objectToArray($objeto),$campo, $tabela);                
                 if($resultado){
-                    Messages::setMsg("Registro Alterado com sucesso",1);
+                    Messages::setMessage("Registro Alterado com sucesso",1);
                 }else{
-                    Messages::setMsg("Nenhum Registro foi alterado", -1) ;
+                    Messages::setMessage("Nenhum Registro foi alterado", -1) ;
                 }
             }else{
-                $resultado =  $dao->inserir(objToArray($objeto), $tabela);
+                $resultado =  $dao->inserir(objectToArray($objeto), $tabela);
                 if($resultado){
-                    Messages::setMsg("Registro inserido com sucesso",1);
+                    Messages::setMessage("Registro inserido com sucesso",1);
                 }else{
-                    Messages::setMsg("Não foi Possível Inserir os dados", -1) ;
+                    Messages::setMessage("Não foi Possível Inserir os dados", -1) ;
                 }
             }
-            Messages::clearForm();
+            Messages::clearFormData();
             return $resultado;
         }else{
             Messages::clearErrors();
@@ -82,8 +82,8 @@ class Service{
     
     public static function logar($campo, $valor, $senha, $tabela){
         $dao = new Dao();
-        Messages::clearForm();
-        Messages::clearMsg();
+        Messages::clearFormData();
+        Messages::clearMessage();
         $resultado = $dao->get($tabela, $campo, $valor,false);
         if($resultado){
             if($resultado->senha == $senha){
@@ -91,7 +91,7 @@ class Service{
                 return true;
             }
         }
-        Messages::setMsg("Login ou senha não encontrados",-1);
+        Messages::setMessage("Login ou senha não encontrados",-1);
         unset($_SESSION[SESSION_LOGIN]);
         return false;
     }
@@ -110,9 +110,9 @@ class Service{
         $dao = new Dao();
         $excluir = $dao->excluir($tabela, $campo, $valor);
         if($excluir){
-            Messages::setMsg("Registro Exluído com Sucesso !");
+            Messages::setMessage("Registro Exluído com Sucesso !");
         }else{
-            Messages::setMsg("Não foi possível excluir o registro",-1);
+            Messages::setMessage("Não foi possível excluir o registro",-1);
         }        
         return  $excluir;
     }

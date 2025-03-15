@@ -1,5 +1,9 @@
 <?php
 // inicializando a sessão
+
+use src\core\CustomExcecao;
+use src\core\CustomException;
+
 session_start();
 
 // importando as dependências
@@ -8,6 +12,14 @@ require_once '../src/helper/helper.php';
 require_once '../src/core/Core.php';
 require_once '../vendor/autoload.php';
 
-// inicializando a aplicação
-$core = new Core;
-$core->run();
+// tratamento de exceções
+try {
+    // inicializando a aplicação
+    $core = new Core;
+    $core->run();
+}
+// caso existam exceções não tratadas:
+catch (Throwable $exception) {
+    // exibe tela de exceção
+    (new CustomException($exception))->showExceptionPage();
+}

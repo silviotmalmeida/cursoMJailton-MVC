@@ -7,20 +7,23 @@
 // function agora(){
 //     return date("H:i:s");
 // }
-//  function extrair_data($data, $opcao=1){
-//      //Opção 1-EN 2-BR
-//      if ($opcao==1){
-//          $dia = substr($data,8,2);
-//          $mes = substr($data,5,2);
-//          $ano = substr($data,0,4);      
-//      }
-//      else{
-//          $dia = substr($data,0,2);
-//          $mes = substr($data,3,2);
-//          $ano = substr($data,6,4);
-//      }
-//      return array($dia,$mes,$ano);
-//  }
+// função auxiliar para converter uma string data em um array [dd,mm,aaaa]
+// a opção 1 refere-se ao formato em inglês aaaammdd
+// a opção 2 refere-se ao formato em português ddmmaaaa
+function stringDateToArray(string $date, int $option = 1): array
+{
+    //Opção 1-EN 2-BR
+    if ($option == 1) {
+        $day = substr($date, 8, 2);
+        $month = substr($date, 5, 2);
+        $year = substr($date, 0, 4);
+    } else {
+        $day = substr($date, 0, 2);
+        $month = substr($date, 3, 2);
+        $year = substr($date, 6, 4);
+    }
+    return array($day, $month, $year);
+}
 //  //Transforma data do formato inglês para o Brasileiro
 //  function databr($data) {
 //      $data = extrair_data($data, 1);
@@ -168,6 +171,3 @@
 //      $data = extrair_data($data, $opcao);
 //      return cal_days_in_month ( CAL_GREGORIAN , intval($data[1]) , $data[2] ); 
 //  }
- 
- 
- 

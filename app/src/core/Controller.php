@@ -8,7 +8,7 @@ namespace src\core;
 class Controller
 {
     // método resposável por carregar as views
-    public function loadView(string $viewName, array $viewData = array()) : void
+    public function loadView(string $viewName, array $viewData = array()): void
     {
         // extraindo os dados passados pelo array
         extract($viewData);
@@ -16,21 +16,27 @@ class Controller
         include "../src/views/" . $viewName . ".php";
     }
 
-    //    public function verMsg($view=null){
-    //        $view = ($view) ? $view : "inc/msg";
-    //        $msg = Flash::getMsg();
-    //        if($msg){
-    //         include "app/views/".$view .".php";
-    //        }
-    //    }
+    // método responsável por exibir as mensagens
+    public function includeMessage(string $messageIncludePath = "includes/message"): void
+    {
+        // coletando as mensagens
+        $message = Messages::getMessage();
+        // se existirem mensagens, faz o include das mensagens
+        if ($message) {
+            include "../src/views/" . $messageIncludePath . ".php";
+        }
+    }
 
-    //    public function verErro($view=null){
-    //        $view = ($view) ? $view : "inc/erros";
-    //        $erros = Flash::getErro();
-    //        if($erros){
-    //            include "app/views/".$view .".php";
-    //        }
-    //    }
+    // método responsável por exibir os erros
+    public function includeErrors(string $errorsIncludePath = "includes/errors"): void
+    {
+        // coletando os erros
+        $errors = Messages::getErrors();
+        // se existirem erros, faz o include dos erros
+        if ($errors) {
+            include "../src/views/" . $errorsIncludePath . ".php";
+        }
+    }
 
     //    public function redirect($view) {
     //        header('Location:' . $view);

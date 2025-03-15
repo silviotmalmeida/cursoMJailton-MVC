@@ -11,11 +11,12 @@ class HomeController extends Controller
 {
    public function index()
    {
-      Messages::setMsg("Home");
+      Messages::setMessage("Sucesso");
+      Messages::setErrors(["Erro01", "Erro02", "Erro03"]);
 
       $viewData["view"] = "home";
       $this->loadView("template", $viewData);
-
-      $model = new Model();
+      $this->includeMessage();
+      $this->includeErrors();
    }
 }

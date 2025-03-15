@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"><!--font icones-->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	
-    <title><?php echo TITULO_SITE; ?> 401</title>
+    <title><?php echo SITE_TITLE; ?> 401</title>
 	<style>
 	body{font-family: 'Roboto', sans-serif;background:linear-gradient(#e4e4e4, #b3b3b3) fixed;background:-moz-linear-gradient(#e4e4e4, #b3b3b3) fixed;background:-ms-linear-gradient(#e4e4e4, #b3b3b3) fixed}
 		@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700');
@@ -41,7 +41,7 @@
 		<i class="far fa-hand-paper"></i>
         <h1 class="error"> <span>Erro 401 </span><br> Não autorizado</h1>
 		<p>Você não tem permissão para acessar está página</p>
-			<a href="<?php echo URL_BASE ?>" class="btn voltar">Voltar para a página inicial</a>
+			<a href="<?php echo BASE_URL ?>" class="btn voltar">Voltar para a página inicial</a>
 		<i class="blur"></i>
     </div>
 </body>

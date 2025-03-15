@@ -11,84 +11,80 @@
 //     return  preg_replace("/\D+/", "", $valor);
 // }
 
-function objToArray($objeto)
+// função auxiliar para converter um objeto em um array, caso necessário
+function objectToArray(object|array $objeto): array
 {
     return is_array($objeto) ? $objeto : (array) $objeto;
 }
 
-// function validaEmail($email){  
-//     $conta = "/[a-zA-Z0-9\._-]+@";
-//     $domino = "[a-zA-Z0-9\._-]+.";
-//     $extensao = "([a-zA-Z]{2,4})$/";
-//     $pattern = $conta.$domino.$extensao;    
-//     if (preg_match($pattern, $email))
-//         return true;
-//     else
-//         return false;
-//  }
- 
+// função auxiliar para validar email
+function validateEmail(string $email): bool
+{
+    // separando os campos
+    $user = "/[a-zA-Z0-9\._-]+@";
+    $domain = "[a-zA-Z0-9\._-]+.";
+    $extension = "([a-zA-Z]{2,4})$/";
+    $pattern = $user . $domain . $extension;
+    if (preg_match($pattern, $email))
+        return true;
+    else
+        return false;
+}
 
- 
-//  function validaCPF($cpf){     
-//      // Extrai somente os números
-//      $cpf = preg_replace('/[^0-9]/is', '', $cpf);
-     
-//      // Verifica se foi informado todos os digitos corretamente
-//      if (strlen($cpf) != 11) {
-//          return false;
-//      }
-     
-//      // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
-//      if (preg_match('/(\d)\1{10}/', $cpf)) {
-//          return false;
-//      }
-     
-//      // Faz o calculo para validar o CPF
-//      for ($t = 9; $t < 11; $t ++) {
-//          for ($d = 0, $c = 0; $c < $t; $c ++) {
-//              $d += $cpf[$c] * (($t + 1) - $c);
-//          }
-         
-//          $d = ((10 * $d) % 11) % 10;
-//          if ($cpf[$c] != $d) {
-//              return false;
-//          }
-//      }
-//      return true;
-//  }
- 
-//  function validaCNPJ($cnpj) {
-//      $cnpj = preg_replace('/[^0-9]/', '', (string) $cnpj);
-     
-//      // Valida tamanho
-//      if (strlen($cnpj) != 14)
-//          return false;
-         
-//          // Verifica se todos os digitos são iguais
-//          if (preg_match('/(\d)\1{13}/', $cnpj))
-//              return false;
-             
-//              // Valida primeiro dígito verificador
-//              for ($i = 0, $j = 5, $soma = 0; $i < 12; $i ++) {
-//                  $soma += $cnpj[$i] * $j;
-//                  $j = ($j == 2) ? 9 : $j - 1;
-//              }
-             
-//              $resto = $soma % 11;
-             
-//              if ($cnpj[12] != ($resto < 2 ? 0 : 11 - $resto))
-//                  return false;
-                 
-//                  // Valida segundo dígito verificador
-//                  for ($i = 0, $j = 6, $soma = 0; $i < 13; $i ++) {
-//                      $soma += $cnpj[$i] * $j;
-//                      $j = ($j == 2) ? 9 : $j - 1;
-//                  }
-                 
-//                  $resto = $soma % 11;
-                 
-//                  return $cnpj[13] == ($resto < 2 ? 0 : 11 - $resto);
-//  }
+// função auxiliar para validar CPF
+function validateCPF(string $cpf): bool
+{
+    // Extrai somente os números
+    $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+    // Verifica se foi informado todos os digitos corretamente
+    if (strlen($cpf) != 11) {
+        return false;
+    }
+    // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
+    if (preg_match('/(\d)\1{10}/', $cpf)) {
+        return false;
+    }
+    // Faz o calculo para validar o CPF
+    for ($t = 9; $t < 11; $t++) {
+        for ($d = 0, $c = 0; $c < $t; $c++) {
+            $d += $cpf[$c] * (($t + 1) - $c);
+        }
+        $d = ((10 * $d) % 11) % 10;
+        if ($cpf[$c] != $d) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// função auxiliar para validar CNPJ
+function validateCNPJ(string $cnpj): bool
+{
+    // Extrai somente os números
+    $cnpj = preg_replace('/[^0-9]/', '', (string) $cnpj);
+    // Verifica se foi informado todos os digitos corretamente
+    if (strlen($cnpj) != 14)
+        return false;
+    // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
+    if (preg_match('/(\d)\1{13}/', $cnpj))
+        return false;
+    // Valida primeiro dígito verificador
+    for ($i = 0, $j = 5, $soma = 0; $i < 12; $i++) {
+        $soma += $cnpj[$i] * $j;
+        $j = ($j == 2) ? 9 : $j - 1;
+    }
+    $resto = $soma % 11;
+    if ($cnpj[12] != ($resto < 2 ? 0 : 11 - $resto))
+        return false;
+
+    // Valida segundo dígito verificador
+    for ($i = 0, $j = 6, $soma = 0; $i < 13; $i++) {
+        $soma += $cnpj[$i] * $j;
+        $j = ($j == 2) ? 9 : $j - 1;
+    }
+    $resto = $soma % 11;
+return $cnpj[13] == ($resto < 2 ? 0 : 11 - $resto);
+}
  
  
 //  ///
