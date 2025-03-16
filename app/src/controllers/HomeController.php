@@ -5,6 +5,7 @@ namespace src\controllers;
 use src\core\Controller;
 use src\core\Messages;
 use src\core\Model;
+use src\core\Validation;
 
 // controller default
 class HomeController extends Controller

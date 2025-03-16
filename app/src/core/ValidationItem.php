@@ -8,8 +8,8 @@ class ValidationItem
 {
     private string $key;
     private mixed $value;
-    private array $errors;
-    private int $errorCode;
+    private array $errors = [];
+    private array $errorCode = [];
 
     // construtor
     public function __construct($key = null, $value = null)
@@ -194,16 +194,19 @@ class ValidationItem
         return $this;
     }
 
-    // public function isUnico($qtde, $msg = null, $erro = Validacao::ERRO_UNICO)
-    // {
-    //     if ($qtde > 0) {
-    //         if ($msg == null) {
-    //             $msg = "Já existe um registro com este " . $this->campo;
-    //         }
-    //         $this->erro[$erro]          = $msg;
-    //         $this->codigo_erro[$erro]   = true;
-    //     }
-
-    //     return $this;
-    // }
+    // verificando se é único
+    public function isUnique(int $countInDB, string $message = null, int $errorConstant = Validation::ERROR_UNIQUE): ValidationItem
+    {
+        // se existirem registro iguais no BD
+        if ($countInDB > 0) {
+            // se não foi passada a mensagem, usa a padrão
+            if ($message == null) {
+                $message = "Já existe um registro com este " . $this->key;
+            }
+            // setando o erro
+            $this->errors[$errorConstant] = $message;
+            $this->errorCode[$errorConstant] = true;
+        }
+        return $this;
+    }
 }

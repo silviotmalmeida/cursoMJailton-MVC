@@ -20,14 +20,14 @@ class Validation
     const ERROR_EMAIL  = 6;
     const ERROR_CPF    = 7;
     const ERROR_CNPJ   = 8;
-    const ERROR_UNICO  = 9;
+    const ERROR_UNIQUE  = 9;
 
     // construtor
     public function __construct()
     {
-        $this->attributes = array();
-        $this->items = array();
-        $this->errors = array();
+        $this->attributes = [];
+        $this->items = [];
+        $this->errors = [];
     }
 
     // método para inserção dos dados
@@ -70,7 +70,7 @@ class Validation
                 // iterando sobre os erros do item
                 foreach ($item->getErrors() as $error) {
                     // incrementando o array de erros
-                    array_push($this->errors[], $error);
+                    array_push($this->errors, $error);
                 }
             }
         }
