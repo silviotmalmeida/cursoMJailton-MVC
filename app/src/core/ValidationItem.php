@@ -3,6 +3,7 @@
 namespace src\core;
 
 use Exception;
+use src\helper\DateTimeHelper;
 
 class ValidationItem
 {
@@ -127,7 +128,7 @@ class ValidationItem
     public function isDate(int $option, string $message = null, int $errorConstant = Validation::ERROR_DATE): ValidationItem
     {
         // convertendo a string da data para array
-        $dateArray = stringDateToArray($this->value, $option);
+        $dateArray = DateTimeHelper::stringDateToArray($this->value, $option);
         // se algum dos campos não for numérico ou a combinação deles não compuser uma data válida
         if (
             !is_numeric($dateArray[0]) ||

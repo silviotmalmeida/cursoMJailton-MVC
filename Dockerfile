@@ -2,7 +2,15 @@
 FROM php:8.1-apache
 
 # Instalando extensões
-RUN apt-get update \
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    iputils-ping \
     && docker-php-ext-install pdo pdo_mysql mysqli
 
 # copiando o composer para a pasta bin para podermos executá-lo

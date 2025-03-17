@@ -1,7 +1,6 @@
 <?php
 // inicializando a sessão
 
-use src\core\CustomExcecao;
 use src\core\CustomException;
 
 session_start();
