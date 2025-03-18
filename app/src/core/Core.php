@@ -1,5 +1,10 @@
 <?php
 
+namespace src\core;
+
+use ArgumentCountError;
+use Exception;
+
 // classe do núcleo da aplicação
 class Core
 {
