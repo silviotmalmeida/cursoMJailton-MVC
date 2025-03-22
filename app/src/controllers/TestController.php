@@ -3,25 +3,25 @@
 namespace src\controllers;
 
 use src\core\Controller;
-use src\models\CategoryModel;
+use src\models\TestModel;
 
 // controller para testes
-class CategoryController extends Controller
+class TestController extends Controller
 {
     public function index(): void
     {
         // enviando dados para a view
-        $viewData["view"] = "category";
+        $viewData["view"] = "test";
         $this->loadView("template", $viewData);
     }
 
     public function all(): void
     {
         // obtendo os dados da model
-        $data = (new CategoryModel)->all();
+        $data = (new TestModel)->all();
 
         // enviando dados para a view
-        $viewData["view"] = "category";
+        $viewData["view"] = "test";
         $viewData["data"] = $data;
         $this->loadView("template", $viewData);
     }

@@ -7,40 +7,52 @@ use PDO;
 use PDOException;
 
 // classe a ser extendida pelas models
-class Model{
+class Model
+{
 
     // atributos
     protected ?PDO $connection;
     protected string $table;
-    
+
     // construtor
-    public function __construct() {
+    public function __construct()
+    {
         // criando a conexão com o bd
         $this->connection = Connection::connect();
     }
-    
-    // // Serve para fazer consultas utilizando parametros
-    // function query($conn, $sql, $parametro = array(), $isLista=true ){
-    //     $stmt = $conn->prepare($sql);
-    //     if(!$parametro){
-    //         throw new  Exception("É necessário enviar os parâmetros para o método consultar");
-    //     }
-        
-    //     try {
-    //         foreach($parametro as $chave=>$valor){
-    //             $stmt->bindValue(":$chave", $valor);
-    //         }
-    //         $stmt->execute();
-    //         if($isLista){
-    //             return $stmt->fetchAll(\PDO::FETCH_OBJ);
-    //         }else{
-    //             return $stmt->fetch(\PDO::FETCH_OBJ);
-    //         }
-    //     }catch (PDOException $e){
-    //         throw new Exception($e->getMessage());
-    //     }
-    // }
-    
+
+    // função para fazer consultas utilizando parametros
+    function query(string $sql, array $params = [], bool $isList = true): mixed
+    {
+        // preparando a consulta
+        $stmt = $this->connection->prepare($sql);
+        // se os filtros não forem passados, lança exceção
+        if (!$params) {
+            throw new  Exception("É necessário enviar os parâmetros para o método consultar");
+        }
+        // tratamento de exceções
+        try {
+            // inserindo os filtros da consulta
+            foreach ($params as $chave => $valor) {
+                $stmt->bindValue(":$chave", $valor);
+            }
+            // executando a consulta
+            $stmt->execute();
+            // definindo o retorno como array de objetos
+            if ($isList) {
+                return $stmt->fetchAll(PDO::FETCH_OBJ);
+            }
+            // definindo retorno como objeto simples
+            else {
+                return $stmt->fetch(PDO::FETCH_OBJ);
+            }
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     // //Serve para fazer consultas diversas, sem parâmetros
     // function select($conn, $sql, $isLista=true ){
     //     try {
@@ -54,7 +66,7 @@ class Model{
     //         throw new \Exception($e->getMessage());
     //     }
     // }
-    
+
     // //Retorna uma lista da tabela
     // function all($conn, $table =null){
     //     $table = ($table) ? $table: $this->table;
@@ -62,12 +74,12 @@ class Model{
     //         $sql = "SELECT * FROM ". $table;
     //         $stmt = $conn->query($sql);
     //         return $stmt->fetchAll(PDO::FETCH_OBJ);
-            
+
     //     }catch (PDOException $e){
     //         throw new Exception($e->getMessage());
     //     }
     // }
-    
+
     // //Retorna uma consulta por um campo
     // function find($conn, $campo, $valor, $tabela=null, $isLista=false ){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
@@ -81,12 +93,12 @@ class Model{
     //         }else{
     //             return $stmt->fetch(\PDO::FETCH_OBJ);
     //         }
-            
+
     //     }catch (\PDOException $e){
     //         throw new \Exception($e->getMessage());
     //     }
     // }    
-    
+
     // //Retorna uma consulta por um campo
     // function findGeral($conn, $campo, $operador, $valor, $tabela=null, $isLista=false ){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
@@ -100,12 +112,12 @@ class Model{
     //         }else{
     //             return $stmt->fetch(\PDO::FETCH_OBJ);
     //         }
-            
+
     //     }catch (\PDOException $e){
     //         throw new \Exception($e->getMessage());
     //     }
     // } 
- 
+
     // //Retorna uma consulta por um campo
     // function findLike($conn, $campo, $valor, $tabela=null, $isLista=false, $posicao=null ){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
@@ -121,19 +133,19 @@ class Model{
     //                 $stmt->bindValue(":campo", "%". $valor);
     //             }
     //         }
-            
+
     //         $stmt->execute();
     //         if($isLista){
     //             return $stmt->fetchAll(\PDO::FETCH_OBJ);
     //         }else{
     //             return $stmt->fetch(\PDO::FETCH_OBJ);
     //         }
-            
+
     //     }catch (\PDOException $e){
     //         throw new \Exception($e->getMessage());
     //     }
     // }
-    
+
     // function findAgrega($conn, $tipo, $campoAgregacao, $tabela=null , $campo = null, $valor =null  ){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
     //     try {
@@ -142,7 +154,7 @@ class Model{
     //         }else{
     //             $condicao = "";
     //         }
-            
+
     //         if($tipo=="soma"){
     //             $sql = "SELECT sum($campoAgregacao) as soma FROM ". $tabela .$condicao;
     //         }else if($tipo=="total"){
@@ -158,12 +170,12 @@ class Model{
     //         $stmt->bindValue(":campo", $valor);
     //         $stmt->execute();
     //         return $stmt->fetch(\PDO::FETCH_OBJ);            
-            
+
     //     }catch (\PDOException $e){
     //         throw new \Exception($e->getMessage());
     //     }
     // }
-     
+
     // //Retorna uma consulta por um campo
     // function findEntre($conn, $campo, $valor1, $valor2, $tabela=null ){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
@@ -174,19 +186,19 @@ class Model{
     //         $stmt->bindValue(":valor2", $valor2);
     //         $stmt->execute();
     //         return $stmt->fetchAll(\PDO::FETCH_OBJ);
-            
-            
+
+
     //     }catch (\PDOException $e){
     //         throw new \Exception($e->getMessage());
     //     }
     // } 
-    
+
     // function add($conn, $dados, $tabela=null ){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
     //     if(!$dados){
     //         throw new Exception("É necessário enviar os parâmetros para o método add");
     //     }
-        
+
     //     if(!is_array($dados)){
     //         throw new Exception("Para poder inserir os dados os valores precisam está em forma de array");
     //     }
@@ -206,26 +218,26 @@ class Model{
     //         throw new \Exception($e->getMessage());
     //     }
     // }
-    
+
     // function edit($conn, $dados, $campo, $tabela =null){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
     //     $parametro = null;
-        
+
     //     if(!$dados){
     //         throw new Exception("É necessário enviar os parâmetros para o método edit");
     //     }
-        
+
     //     if(!is_array($dados)){
     //         throw new Exception("Para poder editar os dados os valores precisam está em forma de array");
     //     }
-        
+
     //     try {
     //         foreach($dados as $chave=>$valor){
     //             $parametro .="$chave=:$chave, ";
     //         }
     //         $condicao = $campo ." = " . $dados[$campo];
     //         $parametro = rtrim($parametro, ', ');
-            
+
     //         $sql = "UPDATE {$tabela} SET {$parametro} WHERE {$condicao} ";
     //         $stmt = $conn->prepare($sql);
     //         foreach($dados as $chave=>$valor){
@@ -237,10 +249,10 @@ class Model{
     //         throw new \Exception($e->getMessage());
     //     }        
     // }
-    
+
     // function del($conn, $campo, $valor,$tabela=null){
     //     $tabela = ($tabela) ? $tabela: $this->tabela;
-        
+
     //     if(!$campo || !$valor){
     //         throw new Exception("É necessário enviar o campo e o valor para fazer a exclusão");
     //     }
@@ -253,7 +265,6 @@ class Model{
     //     } catch (Exception $e) {
     //         throw new \Exception($e->getMessage());
     //     }
-        
+
     // }
 }
-

@@ -5,19 +5,18 @@ namespace src\models;
 use src\core\Model;
 
 // model para testes
-class CategoryModel extends Model
+class TestModel extends Model
 {
-
-    // construtor
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    // // construtor
+    // public function __construct()
+    // {
+    //     parent::__construct();
+    // }
 
     // método de listagem
     public function all()
     {
-        $sql = 'SELECT * FROM categories';
+        $sql = 'SELECT * FROM test';
 
         return $this->connection->query($sql)->fetchAll();
     }
