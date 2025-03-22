@@ -5,9 +5,9 @@ namespace src\tests\unit\helper;
 use PHPUnit\Framework\TestCase;
 use src\helper\DateTimeHelper;
 
-class datahoraUnitTest extends TestCase
+class DateTimeHelperUnitTest extends TestCase
 {
-    public function testStringDateToArray() {
+    public function testStringDateToArrayTest() {
 
         $dateOption1 = "2025-03-16";
         $dateOption2 = "16-03-2025";

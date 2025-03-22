@@ -1,6 +1,7 @@
 <?php
 namespace src\models\service;
 use src\core\Messages;
+use src\helper\Helper;
 use src\models\dao\Dao;
 
 class Service{       
@@ -57,14 +58,14 @@ class Service{
         if(!$erros){
             $dao = new Dao();            
             if($objeto->$campo){
-                $resultado =  $dao->editar(objectToArray($objeto),$campo, $tabela);                
+                $resultado =  $dao->editar(Helper::objectToArray($objeto),$campo, $tabela);                
                 if($resultado){
                     Messages::setMessage("Registro Alterado com sucesso",1);
                 }else{
                     Messages::setMessage("Nenhum Registro foi alterado", -1) ;
                 }
             }else{
-                $resultado =  $dao->inserir(objectToArray($objeto), $tabela);
+                $resultado =  $dao->inserir(Helper::objectToArray($objeto), $tabela);
                 if($resultado){
                     Messages::setMessage("Registro inserido com sucesso",1);
                 }else{

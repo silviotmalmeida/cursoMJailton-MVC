@@ -8,7 +8,6 @@ session_start();
 
 // importando as dependências
 require_once '../config/config.php';
-require_once '../src/helper/helper.php';
 require_once '../vendor/autoload.php';
 
 // tratamento de exceções

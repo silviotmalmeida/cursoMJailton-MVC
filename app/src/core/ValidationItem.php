@@ -2,8 +2,8 @@
 
 namespace src\core;
 
-use Exception;
 use src\helper\DateTimeHelper;
+use src\helper\Helper;
 
 class ValidationItem
 {
@@ -151,7 +151,7 @@ class ValidationItem
     public function isEmail(string $message = null, int $errorConstant = Validation::ERROR_EMAIL): ValidationItem
     {
         // se não for email
-        if (!validateEmail($this->value)) {
+        if (!Helper::validateEmail($this->value)) {
             // se não foi passada a mensagem, usa a padrão
             if ($message == null) {
                 $message = "O campo " . $this->key . " precisa ser um email válido ";
@@ -167,7 +167,7 @@ class ValidationItem
     public function isCPF(string $message = null, int $errorConstant = Validation::ERROR_CPF): ValidationItem
     {
         // se não for cpf
-        if (!validateCPF($this->value)) {
+        if (!Helper::validateCPF($this->value)) {
             // se não foi passada a mensagem, usa a padrão
             if ($message == null) {
                 $message = "O campo " . $this->key . " precisa ser um CPF válido ";
@@ -183,7 +183,7 @@ class ValidationItem
     public function isCNPJ(string $message = null, int $errorConstant = Validation::ERROR_CNPJ): ValidationItem
     {
         // se não for cpf
-        if (!validateCNPJ($this->value)) {
+        if (!Helper::validateCNPJ($this->value)) {
             // se não foi passada a mensagem, usa a padrão
             if ($message == null) {
                 $message = "O campo " . $this->key . " precisa ser um CNPJ válido ";
@@ -198,7 +198,7 @@ class ValidationItem
     // verificando se é único
     public function isUnique(int $countInDB, string $message = null, int $errorConstant = Validation::ERROR_UNIQUE): ValidationItem
     {
-        // se existirem registro iguais no BD
+        // se existirem registros iguais no BD
         if ($countInDB > 0) {
             // se não foi passada a mensagem, usa a padrão
             if ($message == null) {
