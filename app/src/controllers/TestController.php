@@ -18,7 +18,7 @@ class TestController extends Controller
     public function all(): void
     {
         // obtendo os dados da model
-        $data = (new TestModel)->all();
+        $data = TestModel::preparedGet();
 
         // enviando dados para a view
         $viewData["view"] = "test";

@@ -2,8 +2,6 @@
 
 namespace src\tests\feature\models;
 
-require_once realpath(dirname(__FILE__) . '/../../../../config/configDB.php');
-
 use PDO;
 use PHPUnit\Framework\TestCase;
 use src\core\Database;

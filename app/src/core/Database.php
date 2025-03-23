@@ -50,32 +50,83 @@ class Database
         //criando a conexão
         $conn = self::getConnection();
 
-        //realizando a consulta
-        $result = $conn->query($sql);
+        // tratamento de exceções
+        try {
 
-        //fechando a conexão
-        self::closeConnection();
+            //realizando a consulta
+            $result = $conn->query($sql);
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
 
         return $result;
     }
 
     //função que executa uma query e retorna o id de inserção,
     //caso seja uma query de inserção, senão retorna false
-    public static function executeSQL(string $sql) : string|false
+    public static function executeSQL(string $sql): string|false
     {
 
         //criando a conexão
         $conn = self::getConnection();
 
-        //executando a query
-        $result = $conn->exec($sql);
+        // tratamento de exceções
+        try {
 
-        //obtendo o id, caso seja uma operação de inserção
-        $id = $conn->lastInsertId();
+            //executando a query
+            $result = $conn->exec($sql);
 
-        //fechando a conexão
-        self::closeConnection();
+            //obtendo o id, caso seja uma operação de inserção
+            $id = $conn->lastInsertId();
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
 
         return $id;
+    }
+
+    //função que realiza uma consulta e retorna o resultado
+    public static function getResultFromPreparedQuery(string $maskedSql, array $keyValuesArray): PDOStatement|false
+    {
+        //criando a conexão
+        $conn = self::getConnection();
+
+        //preparando a consulta
+        $result = $conn->prepare($maskedSql);
+
+        // tratamento de exceções
+        try {
+            // inserindo os valores da consulta
+            foreach ($keyValuesArray as $chave => $valor) {
+                $result->bindValue(":$chave", $valor);
+            }
+            // executando a consulta
+            $result->execute();
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
+
+        return $result;
     }
 }
