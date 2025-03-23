@@ -18,7 +18,8 @@ class Model
     public function __construct()
     {
         // criando a conexão com o bd
-        $this->connection = Connection::connect();
+        // $this->connection = Connection::connect();
+        $this->connection = Database::getConnection();
     }
 
     // função para fazer consultas utilizando parametros
