@@ -16,13 +16,6 @@ class TestModel extends Model2
         'id',
         'name',
         'email',
+        'profession',
     ];
-
-    // método de listagem
-    public function all()
-    {
-        $sql = 'SELECT * FROM test';
-
-        return $this->connection->query($sql)->fetchAll();
-    }
 }

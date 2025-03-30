@@ -73,7 +73,6 @@ class Database
     //caso seja uma query de inserção, senão retorna false
     public static function executeSQL(string $sql): string|false
     {
-
         //criando a conexão
         $conn = self::getConnection();
 

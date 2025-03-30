@@ -67,31 +67,6 @@ class Model2
         return Helper::objectToArray($this);
     }
 
-    //funcao que realiza uma consulta e retorna o primeiro objeto populado com os dados da consulta
-    //os filtros referem-se à clausula WHERE. Deve ser passado um array chave=>valor
-    //as colunas referem-se aos atributos desejados. Deve ser passado uma string separada por virgulas
-    public static function getOne(
-        string $columns = '*',
-        array $filters = [],
-        string $filterType = 'AND',
-        string $orderColumn = '',
-        string $orderType = 'ASC'
-    ): object|null {
-        //obtendo a classe que chamou esta funcao
-        //o metodo get_called_class retorna a classe que chamou a funcao
-        $class = get_called_class();
-        // realizando a consulta
-        $result = static::getResultSetFromSelect(
-            $columns,
-            $filters,
-            $filterType,
-            $orderColumn,
-            $orderType
-        );
-        // se existirem resultados, instancia um objeto e popula com os resultados
-        return $result ? new $class(Helper::objectToArray($result->fetch(PDO::FETCH_OBJ))) : null;
-    }
-
     //funcao que realiza uma consulta e retorna objetos populados com os dados da consulta
     //os filtros referem-se à clausula WHERE. Deve ser passado um array chave=>valor
     //as colunas referem-se aos atributos desejados. Deve ser passado uma string separada por virgulas
@@ -100,7 +75,8 @@ class Model2
         array $filters = [],
         string $filterType = 'AND',
         string $orderColumn = '',
-        string $orderType = 'ASC'
+        string $orderType = 'ASC',
+        int $limit = 0
     ): array {
         // inicializando o array de objetos
         $objects = [];
@@ -111,7 +87,8 @@ class Model2
             $filters,
             $filterType,
             $orderColumn,
-            $orderType
+            $orderType,
+            $limit
         );
 
         // se existirem resultados
@@ -132,12 +109,19 @@ class Model2
     }
 
     //função que insere um registro na tabela
-    public function insert()
+    public function insert(): int
     {
+        // removendo a coluna id(autoincrement) das demais a serem consideradas na inserção
+        $insertColumns = static::$columns;
+        $keyId = array_search('id', $insertColumns);
+        if ($keyId !== false) {
+            unset($insertColumns[$keyId]);
+        }
+
         //construindo a query a partir das variáveis estáticas da model
         $sql = "INSERT INTO " . static::$tableName . " ("
-            . implode(",", static::$columns) . ") VALUES (";
-        foreach (static::$columns as $col) {
+            . implode(",", $insertColumns) . ") VALUES (";
+        foreach ($insertColumns as $col) {
             $sql .= static::getFormatedValue($this->$col) . ",";
         }
 
@@ -147,33 +131,44 @@ class Model2
         //executando a query e obtendo o id de inserção
         $id = Database::executeSQL($sql);
         $this->id = $id;
+
+        return $id;
     }
 
     //função que altera um registro na tabela
     public function update(): void
     {
+        // removendo a coluna id(autoincrement) das demais a serem consideradas na inserção
+        $insertColumns = static::$columns;
+        $keyId = array_search('id', $insertColumns);
+        if ($keyId !== false) {
+            unset($insertColumns[$keyId]);
+        }
+
         //construindo a query a partir das variáveis estáticas da model
         $sql = "UPDATE " . static::$tableName . " SET ";
-        foreach (static::$columns as $col) {
+        foreach ($insertColumns as $col) {
             $sql .= " ${col} = " . static::getFormatedValue($this->$col) . ",";
         }
         //substituindo a última vírgula por um espaço em branco
         $sql[strlen($sql) - 1] = ' ';
+
         //inserindo a cláusula where
         $sql .= "WHERE id = {$this->id}";
+        
         //executando a query
         Database::executeSQL($sql);
     }
 
-    //função que retorna a quantidade de registros de uma consulta
-    public static function getCount(array $filters = []): int
-    {
-        $result = static::getResultSetFromSelect(
-            'count(*) as count',
-            $filters
-        );
-        return count($result->fetchAll(PDO::FETCH_OBJ));
-    }
+    // //função que retorna a quantidade de registros de uma consulta
+    // public static function getCount(array $filters = []): int
+    // {
+    //     $result = static::getResultSetFromSelect(
+    //         'count(*) as count',
+    //         $filters
+    //     );
+    //     return count($result->fetchAll(PDO::FETCH_OBJ));
+    // }
 
     //função que exclui um registro na tabela
     public function delete(): void
@@ -185,7 +180,7 @@ class Model2
     public static function deleteById(string $id): void
     {
         //contruindo a query
-        $sql = "DELETE FROM " . static::$tableName . " WHERE id = {$id}";
+        $sql = "DELETE FROM " . static::$tableName . " WHERE id = $id";
 
         //executando a query
         Database::executeSQL($sql);
@@ -197,7 +192,8 @@ class Model2
         array $filters = [],
         string $filterType = 'AND',
         string $orderColumn = '',
-        string $orderType = 'ASC'
+        string $orderType = 'ASC',
+        int $limit = 0
     ): PDOStatement|false|null {
         //construção do comando sql
         $sql = "SELECT ${columns} FROM "
@@ -211,6 +207,9 @@ class Model2
         //caso exista coluna de ordenação e os tipos de ordenação forem ASC ou DESC
         if ($orderColumn and ($orderType === 'ASC' or $orderType === 'DESC'))
             $sql = $sql . " ORDER BY $orderColumn $orderType";
+
+        //caso exista limitador de resultados
+        if ($limit > 0) $sql = $sql . " LIMIT $limit";
 
         //realizando a consulta
         $result = Database::getResultFromQuery($sql);
@@ -286,26 +285,29 @@ class Model2
         }
     }
 
-    //funcao que realiza uma consulta e retorna o primeiro objeto populado com os dados da consulta
-    //os filtros referem-se à clausula WHERE. Deve ser passado um array chave=>valor
-    //as colunas referem-se aos atributos desejados. Deve ser passado uma string separada por virgulas
-    public static function preparedGetOne(array $filters = [], string $columns = '*'): object|null
-    {
-        $class = get_called_class();
-        $result = static::getResultSetFromPreparedQuery($filters, $columns);
-        return $result ? new $class(Helper::objectToArray($result->fetch(PDO::FETCH_OBJ))) : null;
-    }
-
     //funcao que realiza uma consulta e retorna objetos populados com os dados da consulta
     //os filtros referem-se à clausula WHERE. Deve ser passado um array chave=>valor
     //as colunas referem-se aos atributos desejados. Deve ser passado uma string separada por virgulas
-    public static function preparedGet(array $filters = [], string $columns = '*'): array
-    {
+    public static function preparedGet(
+        string $columns = '*',
+        array $filters = [],
+        string $filterType = 'AND',
+        string $orderColumn = '',
+        string $orderType = 'ASC',
+        int $limit = 0
+    ): array {
         // inicializando o array de objetos
         $objects = [];
 
         //realizando a consulta
-        $result = static::getResultSetFromPreparedQuery($filters, $columns);
+        $result = static::getResultSetFromPreparedQuery(
+            $columns,
+            $filters,
+            $filterType,
+            $orderColumn,
+            $orderType,
+            $limit
+        );
 
         if ($result !== false and $result !== null) {
 
@@ -324,8 +326,14 @@ class Model2
     }
 
     //função auxiliar que implementa uma prepared query, retornando o resultado
-    private static function getResultSetFromPreparedQuery(array $filters = [], string $columns = '*'): PDOStatement|false|null
-    {
+    private static function getResultSetFromPreparedQuery(
+        string $columns = '*',
+        array $filters = [],
+        string $filterType = 'AND',
+        string $orderColumn = '',
+        string $orderType = 'ASC',
+        int $limit = 0
+    ): PDOStatement|false|null {
         //construção do comando sql
         $maskedSql = "SELECT ${columns} FROM "
 
@@ -333,7 +341,14 @@ class Model2
             . static::$tableName
 
             //a validacao da clausula WHERE vem da funcao auxiliar getFilters
-            . static::getPreparedFilters($filters);
+            . static::getPreparedFilters($filters, $filterType);
+
+        //caso exista coluna de ordenação e os tipos de ordenação forem ASC ou DESC
+        if ($orderColumn and ($orderType === 'ASC' or $orderType === 'DESC'))
+            $maskedSql = $maskedSql . " ORDER BY $orderColumn $orderType";
+
+        //caso exista limitador de resultados
+        if ($limit > 0) $maskedSql = $maskedSql . " LIMIT $limit";
 
         //realizando a consulta
         $result = Database::getResultFromPreparedQuery($maskedSql, $filters);
@@ -347,22 +362,32 @@ class Model2
     }
 
     //função auxiliar que formata os filtros a serem inseridos na cláusula WHERE
-    private static function getPreparedFilters(array $filters): string
+    private static function getPreparedFilters(array $filters, string $filterType = 'AND'): string
     {
         //construção da cláusula WHERE        
         $sql = '';
 
-        //só será construída caso existam filtros
-        if (count($filters) > 0) {
+        //só será construída caso existam filtros e se os tipos de filtros forem AND ou OR
+        if (count($filters) > 0 and ($filterType === 'AND' or $filterType === 'OR')) {
 
-            //artificio utilizado para existir somente um where na consulta
-            $sql .= " WHERE 1 = 1";
+            // caso o tipo de filtro seja AND:
+            if ($filterType === 'AND') {
+
+                // adiciona uma condição que sempre será verdadeira no início
+                $sql .= " WHERE 1 = 1";
+
+                // caso o tipo de filtro seja OR:
+            } elseif ($filterType === 'OR') {
+
+                // adiciona uma condição que sempre será falsa no início
+                $sql .= " WHERE 1 = 0";
+            }
 
             //percorrendo o array de filtros
             foreach ($filters as $column => $value) {
 
                 //será utilizada a chave como o atributo 
-                $sql .= " AND ${column} = :${column}";
+                $sql .= " $filterType $column = :$column";
             }
         }
 
