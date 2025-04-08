@@ -128,4 +128,98 @@ class Database
 
         return $result;
     }
+
+    //função que realiza uma inserção e retorna o id
+    public static function executePreparedInsertQuery(string $maskedSql, array $keyValuesArray): int|false
+    {
+        //criando a conexão
+        $conn = self::getConnection();
+
+        //preparando a inserção
+        $result = $conn->prepare($maskedSql);
+
+        // tratamento de exceções
+        try {
+            // inserindo os valores da inserção
+            foreach ($keyValuesArray as $key => $value) {
+                $type = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+                $result->bindValue(":$key", $value, $type);
+            }
+            // executando a inserção, em caso de sucesso retorna o id
+            if($result->execute()){
+                return $conn->lastInsertId();
+            }
+            // senão retorna false
+            else{
+                return false;
+            }
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
+    }
+
+    //função que realiza uma alteração
+    public static function executePreparedUpdateQuery(string $maskedSql, array $keyValuesArray): void
+    {
+        //criando a conexão
+        $conn = self::getConnection();
+
+        //preparando a alteração
+        $result = $conn->prepare($maskedSql);
+
+        // tratamento de exceções
+        try {
+            // inserindo os valores da alteração
+            foreach ($keyValuesArray as $key => $value) {
+                $result->bindValue(":$key", $value);
+            }
+            // executando a alteração
+            $result->execute();
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
+    }
+
+    //função que realiza uma exclusão
+    public static function executePreparedDeleteQuery(string $maskedSql, array $keyValuesArray): void
+    {
+        //criando a conexão
+        $conn = self::getConnection();
+
+        //preparando a alteração
+        $result = $conn->prepare($maskedSql);
+
+        // tratamento de exceções
+        try {
+            // inserindo os valores da alteração
+            foreach ($keyValuesArray as $key => $value) {
+                $result->bindValue(":$key", $value);
+            }
+            // executando a alteração
+            $result->execute();
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
+    }
 }

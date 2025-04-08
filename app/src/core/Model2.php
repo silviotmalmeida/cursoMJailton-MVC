@@ -109,13 +109,15 @@ class Model2
     }
 
     //função que insere um registro na tabela
-    public function insert(): int
+    public function insert(array $autocolumns): int
     {
-        // removendo a coluna id(autoincrement) das demais a serem consideradas na inserção
+        // removendo as columas que são de autoincremento
         $insertColumns = static::$columns;
-        $keyId = array_search('id', $insertColumns);
-        if ($keyId !== false) {
-            unset($insertColumns[$keyId]);
+        foreach ($autocolumns as $autocolumn) {
+            $keyId = array_search($autocolumn, $insertColumns);
+            if ($keyId !== false) {
+                unset($insertColumns[$keyId]);
+            }
         }
 
         //construindo a query a partir das variáveis estáticas da model
@@ -138,16 +140,9 @@ class Model2
     //função que altera um registro na tabela
     public function update(): void
     {
-        // removendo a coluna id(autoincrement) das demais a serem consideradas na inserção
-        $insertColumns = static::$columns;
-        $keyId = array_search('id', $insertColumns);
-        if ($keyId !== false) {
-            unset($insertColumns[$keyId]);
-        }
-
         //construindo a query a partir das variáveis estáticas da model
         $sql = "UPDATE " . static::$tableName . " SET ";
-        foreach ($insertColumns as $col) {
+        foreach (static::$columns as $col) {
             $sql .= " ${col} = " . static::getFormatedValue($this->$col) . ",";
         }
         //substituindo a última vírgula por um espaço em branco
@@ -155,7 +150,7 @@ class Model2
 
         //inserindo a cláusula where
         $sql .= "WHERE id = {$this->id}";
-        
+
         //executando a query
         Database::executeSQL($sql);
     }
@@ -300,7 +295,7 @@ class Model2
         $objects = [];
 
         //realizando a consulta
-        $result = static::getResultSetFromPreparedQuery(
+        $result = static::getResultSetFromPreparedSelectQuery(
             $columns,
             $filters,
             $filterType,
@@ -325,8 +320,65 @@ class Model2
         return $objects;
     }
 
-    //função auxiliar que implementa uma prepared query, retornando o resultado
-    private static function getResultSetFromPreparedQuery(
+    //função que insere um registro na tabela
+    public function preparedInsert(array $autocolumns): int
+    {
+        // removendo as columas que são de autoincremento
+        $insertColumns = static::$columns;
+        foreach ($autocolumns as $autocolumn) {
+            $keyId = array_search($autocolumn, $insertColumns);
+            if ($keyId !== false) {
+                unset($insertColumns[$keyId]);
+            }
+        }
+
+        //construindo a query a partir das variáveis estáticas da model
+        $maskedSql = "INSERT INTO " . static::$tableName . " ("
+            . implode(",", $insertColumns) . ") VALUES (";
+        foreach ($insertColumns as $col) {
+            $maskedSql .= ":" . $col . ",";
+        }
+
+        //substituindo a última vírgula pelo parenteses final
+        $maskedSql[strlen($maskedSql) - 1] = ')';
+
+        //executando a query e obtendo o id de inserção
+        $id = Database::executePreparedInsertQuery($maskedSql, $this->getValues());
+        $this->id = $id;
+
+        return $id;
+    }
+
+    //função que altera um registro na tabela
+    public function preparedUpdate(): void
+    {
+        //construindo a query a partir das variáveis estáticas da model
+        $maskedSql = "UPDATE " . static::$tableName . " SET ";
+        foreach (static::$columns as $col) {
+            $maskedSql .= " $col = :" . $col . ",";
+        }
+        //substituindo a última vírgula por um espaço em branco
+        $maskedSql[strlen($maskedSql) - 1] = ' ';
+
+        //inserindo a cláusula where
+        $maskedSql .= "WHERE id = {$this->id}";
+
+        //executando a query e obtendo o id de inserção
+        Database::executePreparedUpdateQuery($maskedSql, $this->getValues());        
+    }
+
+    //função que exclui um registro na tabela
+    public function preparedDelete(): void
+    {
+        //construindo a query
+        $maskedSql = "DELETE FROM " . static::$tableName . " WHERE id = :id";
+
+        //executando a query e obtendo o id de inserção
+        Database::executePreparedDeleteQuery($maskedSql, ["id"=>$this->id]);        
+    }
+
+    //função auxiliar que implementa uma prepared select query, retornando o resultado
+    private static function getResultSetFromPreparedSelectQuery(
         string $columns = '*',
         array $filters = [],
         string $filterType = 'AND',

@@ -490,7 +490,7 @@ class TestModelFeatureTest extends TestCase
                 "profession" => $expectedProfession,
             ]
         );
-        $id = $object->insert();
+        $id = $object->insert(['id']);
 
         $models = TestModel::get(filters: ['id' => $id]);
 
@@ -513,6 +513,42 @@ class TestModelFeatureTest extends TestCase
     /**
      * @depends testInsert
      */
+    public function testPreparedInsert()
+    {
+        $expectedName = "Nome Insert";
+        $expectedEmail = "insert@email.com";
+        $expectedProfession = "Profession Insert";
+
+        $object = new TestModel(
+            [
+                "name" => $expectedName,
+                "email" => $expectedEmail,
+                "profession" => $expectedProfession,
+            ]
+        );
+        $id = $object->preparedInsert(['id']);
+
+        $models = TestModel::get(filters: ['id' => $id]);
+
+        $expectedArray = array(
+            new TestModel(
+                [
+                    "id" => $id,
+                    "name" => $expectedName,
+                    "email" => $expectedEmail,
+                    "profession" => $expectedProfession,
+                ]
+            )
+        );
+
+        $this->assertEquals($expectedArray, $models);
+
+        TestModel::deleteById($id);
+    }
+
+    /**
+     * @depends testPreparedInsert
+     */
     public function testDelete()
     {
         $expectedName = "Nome Insert";
@@ -526,7 +562,7 @@ class TestModelFeatureTest extends TestCase
                 "profession" => $expectedProfession,
             ]
         );
-        $id = $object->insert();
+        $id = $object->insert(['id']);
 
         $models = TestModel::get(filters: ['id' => $id]);
 
@@ -538,9 +574,37 @@ class TestModelFeatureTest extends TestCase
 
         $this->assertEquals([], $models);
     }
-
     /**
      * @depends testDelete
+     */
+    public function testPreparedDelete()
+    {
+        $expectedName = "Nome Insert";
+        $expectedEmail = "insert@email.com";
+        $expectedProfession = "Profession Insert";
+
+        $object = new TestModel(
+            [
+                "name" => $expectedName,
+                "email" => $expectedEmail,
+                "profession" => $expectedProfession,
+            ]
+        );
+        $id = $object->preparedInsert(['id']);
+
+        $models = TestModel::get(filters: ['id' => $id]);
+
+        $this->assertNotEquals([], $models);
+
+        $models[0]->preparedDelete();
+
+        $models = TestModel::get(filters: ['id' => $id]);
+
+        $this->assertEquals([], $models);
+    }
+
+    /**
+     * @depends testPreparedDelete
      */
     public function testUpdate()
     {
@@ -555,7 +619,7 @@ class TestModelFeatureTest extends TestCase
                 "profession" => $initialProfession,
             ]
         );
-        $id = $object->insert();
+        $id = $object->insert(['id']);
 
         $expectedName = "Nome Update";
         $expectedEmail = "update@email.com";
@@ -568,6 +632,54 @@ class TestModelFeatureTest extends TestCase
         $models[0]->profession = $expectedProfession;
 
         $models[0]->update();
+
+        $models = TestModel::get(filters: ['id' => $id]);
+
+        $expectedArray = array(
+            new TestModel(
+                [
+                    "id" => $id,
+                    "name" => $expectedName,
+                    "email" => $expectedEmail,
+                    "profession" => $expectedProfession,
+                ]
+            )
+        );
+
+        $this->assertEquals($expectedArray, $models);
+
+        TestModel::deleteById($id);
+    }
+
+    /**
+     * @depends testUpdate
+     */
+    public function testPreparedUpdate()
+    {
+        $initialName = "Nome Insert";
+        $initialEmail = "insert@email.com";
+        $initialProfession = "Profession Insert";
+
+        $object = new TestModel(
+            [
+                "name" => $initialName,
+                "email" => $initialEmail,
+                "profession" => $initialProfession,
+            ]
+        );
+        $id = $object->preparedInsert(['id']);
+
+        $expectedName = "Nome Update";
+        $expectedEmail = "update@email.com";
+        $expectedProfession = "Profession Update";
+
+        $models = TestModel::get(filters: ['id' => $id]);
+
+        $models[0]->name = $expectedName;
+        $models[0]->email = $expectedEmail;
+        $models[0]->profession = $expectedProfession;
+
+        $models[0]->preparedUpdate();
 
         $models = TestModel::get(filters: ['id' => $id]);
 
