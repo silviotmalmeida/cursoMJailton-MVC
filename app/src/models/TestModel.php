@@ -3,10 +3,9 @@
 namespace src\models;
 
 use src\core\Model;
-use src\core\Model2;
 
 // model para testes
-class TestModel extends Model2
+class TestModel extends Model
 {
     //nome da tabela no banco de dados
     protected static $tableName = 'test';

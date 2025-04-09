@@ -1,1 +1,3 @@
-<h3>Aqui fica o rodapé</h3>
+<footer class="rodape">
+			<p>CopyRight - 2018</p>
+		</footer>
