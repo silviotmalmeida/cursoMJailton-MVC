@@ -1,6 +1,9 @@
 # Usando a imagem base do PHP com Apache
 FROM php:8.1-apache
 
+# definindo a pasta de trabalho
+WORKDIR /var/www/html
+
 # Instalando extensões
 RUN apt-get update && apt-get install -y \
     git \

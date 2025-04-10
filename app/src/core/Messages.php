@@ -68,7 +68,7 @@ class Messages
     }
 
     // método para coletar os erros
-    public static function getErrors(): array
+    public static function getErrors(): array|null
     {
         // obtendo os erros, se existirem
         $errors = self::existsErrors() ? $_SESSION["errors"] : null;

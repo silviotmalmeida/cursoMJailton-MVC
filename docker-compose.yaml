@@ -35,6 +35,20 @@ services:
         networks:
             - mvc-network
 
+    phpmyadmin:
+        build:
+            context: ./docker/phpmyadmin
+            dockerfile: Dockerfile
+        container_name: mvc-phpmyadmin
+        ports:
+            - 8081:80
+        environment:
+            - PMA_ARBITRARY=1
+        networks:
+            - mvc-network
+        depends_on:
+            - db
+
 networks:
     mvc-network:
         driver: bridge

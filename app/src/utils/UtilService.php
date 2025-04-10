@@ -1,5 +1,5 @@
 <?php
-namespace app\util;
+namespace src\utils;
 
 use app\core\Flash;
 

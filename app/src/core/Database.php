@@ -8,7 +8,7 @@ use PDOException;
 use PDOStatement;
 
 // classe que vai encapsular toda a lógica de conexão ao banco de dados
-class Database
+abstract class Database
 {
     // atributos
     private static ?PDO $connection = null;
@@ -223,6 +223,41 @@ class Database
         }
     }
 
+    //função que lista as tabelas do bd
+    public static function getTables(): array
+    {
+        // inicializando o array de saída
+        $output = [];
+
+        // lendo informações do env.ini
+        // o dirname(__FILE__) fornece o caminho do arquivo atual
+        $envPath = realpath(dirname(__FILE__) . '/../../config/env.ini');
+        $envFile = parse_ini_file($envPath);
+
+        //criando a conexão
+        $conn = self::getConnection();
+
+        // tratamento de exceções
+        try {
+
+            //realizando a consulta
+            $result = $conn->query("SHOW TABLES FROM " . $envFile['mysql_DB']);
+        }
+        // em caso de erros, lança exceção
+        catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+        // ações finais
+        finally {
+            //fechando a conexão
+            self::closeConnection();
+        }
+
+        //varrendo os resultados
+        $output = $result->fetch(PDO::FETCH_NUM);
+
+        return $output;
+    }
     
     // // função para fazer consultas utilizando parametros
     // function query(string $sql, array $params = [], bool $isList = true): mixed

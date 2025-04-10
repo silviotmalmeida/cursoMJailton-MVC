@@ -8,7 +8,7 @@ use src\helper\Helper;
 
 //classe mãe de todos os models
 //possui os métodos genéricos para consumo das classes filhas
-class Model
+abstract class Model
 {
     //definição dos atributos a serem detalhados nas classes filhas
     protected static $tableName = '';

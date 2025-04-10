@@ -31,7 +31,7 @@
 						</div>
 						</form>
 					</div>
-				<?php $this->verMsg() ?>		
+				<?php $this->includeMessage() ?>		
 				<div class="tabela-responsiva">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0" id="dataTable">
 						<thead> 

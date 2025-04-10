@@ -5,8 +5,8 @@
 						<div class="thead">Inserir novo cadastro</div>
 						<form action="<?php echo BASE_URL ."cliente/salvar"?>" method="POST">
 						<?php 
-						      $this->verMsg();
-						      $this->verErro();
+						      $this->includeMessage();
+						      $this->includeErrors();
 						?>					
 							<div class="rows">
 							  <div class="col-3 position-relative">									
