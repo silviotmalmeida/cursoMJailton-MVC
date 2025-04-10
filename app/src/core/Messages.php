@@ -104,7 +104,7 @@ class Messages
     }
 
     // método para coletar os dados de formulários
-    public static function getFormData(): array|object
+    public static function getFormData(): array|object|null
     {
         // obtendo os dados, se existirem
         $formData = self::existsFormData() ? $_SESSION["formData"] : null;

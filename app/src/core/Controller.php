@@ -38,10 +38,12 @@ class Controller
         }
     }
 
-    //    public function redirect($view) {
-    //        header('Location:' . $view);
-    //        exit;
-    //    }
+    // método para redirecionamento
+    public function redirect($view)
+    {
+        header('Location:' . $view);
+        exit;
+    }
 
     //    public function incluir($view){
     //        include "app/views/".$view .".php";

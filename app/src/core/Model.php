@@ -321,7 +321,7 @@ abstract class Model
     }
 
     //função que insere um registro na tabela
-    public function preparedInsert(array $autocolumns): int
+    public function preparedInsert(array $autocolumns): int|false
     {
         // removendo as columas que são de autoincremento
         $insertColumns = static::$columns;

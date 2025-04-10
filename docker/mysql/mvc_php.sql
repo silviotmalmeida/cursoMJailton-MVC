@@ -24,17 +24,18 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `cliente`
+-- Estrutura para tabela `clientes`
 --
 
-CREATE TABLE `cliente` (
+CREATE TABLE `clientes` (
   `id_cliente` int(11) NOT NULL,
-  `cliente` varchar(100) NOT NULL,
+  `nome` varchar(100) NOT NULL,
   `endereco` varchar(150) NOT NULL,
   `numero` varchar(10) NOT NULL,
   `bairro` varchar(100) NOT NULL,
   `cidade` varchar(80) NOT NULL,
   `cep` varchar(12) NOT NULL,
+  `complemento` varchar(150) NOT NULL,
   `ddd` varchar(2) NOT NULL,
   `celular` varchar(15) NOT NULL,
   `sexo` varchar(15) DEFAULT NULL,
@@ -48,22 +49,22 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Despejando dados para a tabela `cliente`
+-- Despejando dados para a tabela `clientes`
 --
 
-INSERT INTO `cliente` (`id_cliente`, `cliente`, `endereco`, `numero`, `bairro`, `cidade`, `cep`, `ddd`, `celular`, `sexo`, `data_nascimento`, `cpf`, `email`, `site`, `data_cadastro`, `observacao`, `uf`) VALUES
-(1, 'Manoel Jailton Sousa do Nascimento', 'Rua 45', '10', 'Cohama', 'São Luís', '7858544', '98', '9899898', NULL, '2019-12-30', '33716780677', 'mjailton@gmail.com', 'mjailton.com.br', '2019-12-30', '', NULL);
+INSERT INTO `clientes` (`id_cliente`, `nome`, `endereco`, `numero`, `bairro`, `cidade`, `cep`, `complemento`, `ddd`, `celular`, `sexo`, `data_nascimento`, `cpf`, `email`, `site`, `data_cadastro`, `observacao`, `uf`) VALUES
+(1, 'Manoel Jailton Sousa do Nascimento', 'Rua 45', '10', 'Cohama', 'São Luís', '7858544', 'Próximo ao Bar Alcoolizados Anônimos', '98', '9899898', NULL, '2019-12-30', '33716780677', 'mjailton@gmail.com', 'mjailton.com.br', '2019-12-30', '', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `contato`
+-- Estrutura para tabela `contatos`
 --
 
-CREATE TABLE `contato` (
+CREATE TABLE `contatos` (
   `id_contato` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
-  `contato` varchar(100) NOT NULL,
+  `nome` varchar(100) NOT NULL,
   `endereco` varchar(150) NOT NULL,
   `numero` varchar(10) NOT NULL,
   `bairro` varchar(100) NOT NULL,
@@ -81,30 +82,30 @@ CREATE TABLE `contato` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Despejando dados para a tabela `contato`
+-- Despejando dados para a tabela `contatos`
 --
 
-INSERT INTO `contato` (`id_contato`, `id_estado`, `contato`, `endereco`, `numero`, `bairro`, `cidade`, `cep`, `ddd`, `celular`, `sexo`, `data_nascimento`, `cpf`, `email`, `site`, `data_cadastro`, `observacao`) VALUES
+INSERT INTO `contatos` (`id_contato`, `id_estado`, `nome`, `endereco`, `numero`, `bairro`, `cidade`, `cep`, `ddd`, `celular`, `sexo`, `data_nascimento`, `cpf`, `email`, `site`, `data_cadastro`, `observacao`) VALUES
 (1, 3, 'Manoel Jailton Sousa do Nascimento', 'Rua 45', '10', 'Cohama', 'São Luís', '7858544', '98', '9899898', NULL, '2019-12-30', '33716780677', 'mjailton@gmail.com', 'mjailton.com.br', '2019-12-30', ''),
 (2, 3, 'Manoel Jailton Sousa', 'Rua 45', '10', 'Cohama', 'São Luís', '7858544', '98', '9899898', NULL, '2019-12-30', '33716780677', 'mjailton@gmail.com', 'mjailton@gmail.com', '2019-12-30', '');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `estado`
+-- Estrutura para tabela `estados`
 --
 
-CREATE TABLE `estado` (
+CREATE TABLE `estados` (
   `id_estado` int(11) NOT NULL,
-  `estado` varchar(100) NOT NULL,
+  `nome` varchar(100) NOT NULL,
   `sigla` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Despejando dados para a tabela `estado`
+-- Despejando dados para a tabela `estados`
 --
 
-INSERT INTO `estado` (`id_estado`, `estado`, `sigla`) VALUES
+INSERT INTO `estados` (`id_estado`, `nome`, `sigla`) VALUES
 (3, 'Maranhão', 'MA'),
 (4, 'Maranhão', 'MA'),
 (7, 'Rio de Janeiro', 'RJ'),
@@ -138,22 +139,22 @@ INSERT INTO `test` (`id`, `name`, `email`, `profession`) VALUES
 --
 
 --
--- Índices de tabela `cliente`
+-- Índices de tabela `clientes`
 --
-ALTER TABLE `cliente`
+ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id_cliente`);
 
 --
--- Índices de tabela `contato`
+-- Índices de tabela `contatos`
 --
-ALTER TABLE `contato`
+ALTER TABLE `contatos`
   ADD PRIMARY KEY (`id_contato`),
   ADD KEY `fk_contato_estado` (`id_estado`);
 
 --
--- Índices de tabela `estado`
+-- Índices de tabela `estados`
 --
-ALTER TABLE `estado`
+ALTER TABLE `estados`
   ADD PRIMARY KEY (`id_estado`);
 
 --
@@ -167,21 +168,21 @@ ALTER TABLE `test`
 --
 
 --
--- AUTO_INCREMENT de tabela `cliente`
+-- AUTO_INCREMENT de tabela `clientes`
 --
-ALTER TABLE `cliente`
+ALTER TABLE `clientes`
   MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de tabela `contato`
+-- AUTO_INCREMENT de tabela `contatos`
 --
-ALTER TABLE `contato`
+ALTER TABLE `contatos`
   MODIFY `id_contato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `estado`
+-- AUTO_INCREMENT de tabela `estados`
 --
-ALTER TABLE `estado`
+ALTER TABLE `estados`
   MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
@@ -195,10 +196,10 @@ ALTER TABLE `test`
 --
 
 --
--- Restrições para tabelas `contato`
+-- Restrições para tabelas `contatos`
 --
-ALTER TABLE `contato`
-  ADD CONSTRAINT `contato_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `contatos`
+  ADD CONSTRAINT `contato_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

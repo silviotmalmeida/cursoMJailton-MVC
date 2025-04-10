@@ -3,7 +3,7 @@
 				<div class="base-form">
 					<div class="caixa-form">
 						<div class="thead">Inserir novo cadastro</div>
-						<form action="<?php echo BASE_URL ."cliente/salvar"?>" method="POST">
+						<form action="<?php echo BASE_URL ."cliente/save"?>" method="POST">
 						<?php 
 						      $this->includeMessage();
 						      $this->includeErrors();
@@ -20,7 +20,7 @@
 								<div class="rows">
 									<div class="col-12">
 										<label>Nome</label>
-										<input name="cliente" value="<?php echo isset($cliente->cliente) ? $cliente->cliente : null ?>" type="text" placeholder="Insira um nome" class="form-campo">
+										<input name="nome" value="<?php echo isset($cliente->nome) ? $cliente->nome : null ?>" type="text" placeholder="Insira um nome" class="form-campo">
 									</div>
 									<div class="col-4">
 										<label>Cep</label>
@@ -73,8 +73,8 @@
 								</div>
 								
 								<div class="col-4">
-									<label>Data de cadastro</label>
-									<input name="data_cadastro" value="<?php echo isset($cliente->data_cadastro) ? $cliente->data_cadastro : null ?>" type="date" placeholder="Insira sua data" class="form-campo">
+									<label>Data de nascimento</label>
+									<input name="data_nascimento" value="<?php echo isset($cliente->data_nascimento) ? $cliente->data_nascimento : null ?>" type="date" placeholder="Insira sua data" class="form-campo">
 								</div>
 							
 							

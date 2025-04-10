@@ -2,3 +2,4 @@ docker/dbdata
 docker/elasticsearchdata
 app/vendor
 *env.ini
+*.cache
