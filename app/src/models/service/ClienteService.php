@@ -45,7 +45,7 @@ class ClienteService
                 if ($result !== false) {
                     Messages::setMessage("Registro criado com sucesso!", 1);
                     // limpando o array de dados de formulário
-                    // Messages::clearFormData();
+                    Messages::clearFormData();
                 }
                 // senão, registra nensagem de erro
                 else {
@@ -61,7 +61,7 @@ class ClienteService
                 if ($result !== false) {
                     Messages::setMessage("Registro atualizado com sucesso!", 1);
                     // limpando o array de dados de formulário
-                    // Messages::clearFormData();
+                    Messages::clearFormData();
                 }
                 // senão, registra nensagem de erro
                 else {
