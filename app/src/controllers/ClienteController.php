@@ -4,32 +4,44 @@ namespace src\controllers;
 
 use src\core\Controller;
 use src\core\Messages;
+use src\helper\Helper;
 use src\models\service\ClienteService;
 
 class ClienteController extends Controller
 {
 
-    public function index()
+    public function index(): void
     {
         $data["clientes"] = ClienteService::list();
         $data["view"]  = "Cliente/Index";
         $this->loadView("template", $data);
     }
 
-    public function create()
+    public function create(): void
     {
         $data["cliente"] = Messages::getFormData();
         $data["view"]  = "Cliente/Create";
         $this->loadView("template", $data);
     }
 
-    public function update($id)
+    public function update(string $id): void
     {
-        $dados["view"]      = "Cliente/Create";
-        $this->loadView("template", $dados);
+        // obtendo o registro do BD
+        $clienteBD = ClienteService::getOne($id);
+        // se o registro existir, redirecionando para o create
+        if ($clienteBD != []) {
+            $data["cliente"] = Helper::objectToArray($clienteBD[0]);
+            $data["view"]  = "Cliente/Create";
+            $this->loadView("template", $data);
+        }
+        // senão,
+        else {
+            // redirecionando para o index
+            $this->redirect(BASE_URL . "cliente/index");
+        }
     }
 
-    public function save()
+    public function save(): void
     {
         // obtendo os dados do POST
         $keyValueAttributes = [
@@ -43,20 +55,20 @@ class ClienteController extends Controller
             'cidade' => $_POST['cidade'],
             'uf' => $_POST['uf'],
             'celular' => $_POST['celular'],
+            'cpf' => $_POST['cpf'],
             'sexo' => $_POST['sexo'],
             'data_nascimento' => $_POST['data_nascimento'],
-            'cpf' => $_POST['cpf'],
             'email' => $_POST['email'],
             'senha' => $_POST['senha'],
-            'data_cadastro' => date("Y-m-d"),
             'observacao' => $_POST['observacao'],
+            'data_cadastro' => date("Y-m-d"),
         ];
 
         // preservando os dados do formulário para uso posterior, caso necessário
         Messages::setFormData($keyValueAttributes);
 
         // salvando
-        if (ClienteService::create($keyValueAttributes)) {
+        if (ClienteService::save($keyValueAttributes) !== false) {
             // redirecionando para o index
             $this->redirect(BASE_URL . "cliente/index");
         }
@@ -67,5 +79,5 @@ class ClienteController extends Controller
         }
     }
 
-    public function delete($id) {}
+    public function delete(string $id): void {}
 }

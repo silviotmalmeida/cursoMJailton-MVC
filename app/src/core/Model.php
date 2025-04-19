@@ -109,7 +109,7 @@ abstract class Model
     }
 
     //função que insere um registro na tabela
-    public function insert(array $autocolumns): int
+    public function insert(array $autocolumns): string
     {
         // removendo as columas que são de autoincremento
         $insertColumns = static::$columns;
@@ -138,7 +138,7 @@ abstract class Model
     }
 
     //função que altera um registro na tabela
-    public function update(): void
+    public function update(string $primaryKey = 'id'): bool
     {
         //construindo a query a partir das variáveis estáticas da model
         $sql = "UPDATE " . static::$tableName . " SET ";
@@ -149,10 +149,12 @@ abstract class Model
         $sql[strlen($sql) - 1] = ' ';
 
         //inserindo a cláusula where
-        $sql .= "WHERE id = {$this->id}";
+        $sql .= "WHERE $primaryKey = {$this->$primaryKey}";
 
         //executando a query
-        Database::executeSQL($sql);
+        $result = Database::executeSQL($sql);
+
+        return $result !== false ? true : false;
     }
 
     // //função que retorna a quantidade de registros de uma consulta
@@ -166,9 +168,9 @@ abstract class Model
     // }
 
     //função que exclui um registro na tabela
-    public function delete(): void
+    public function delete(string $primaryKey = 'id'): void
     {
-        static::deleteById($this->id);
+        static::deleteById($this->$primaryKey);
     }
 
     //função auxiliar que implementa uma delete query para o id fornecido como atributo
@@ -364,7 +366,7 @@ abstract class Model
         $maskedSql .= "WHERE id = {$this->id}";
 
         //executando a query e obtendo o id de inserção
-        Database::executePreparedUpdateQuery($maskedSql, $this->getValues());        
+        Database::executePreparedUpdateQuery($maskedSql, $this->getValues());
     }
 
     //função que exclui um registro na tabela
@@ -374,7 +376,7 @@ abstract class Model
         $maskedSql = "DELETE FROM " . static::$tableName . " WHERE id = :id";
 
         //executando a query e obtendo o id de inserção
-        Database::executePreparedDeleteQuery($maskedSql, ["id"=>$this->id]);        
+        Database::executePreparedDeleteQuery($maskedSql, ["id" => $this->id]);
     }
 
     //função auxiliar que implementa uma prepared select query, retornando o resultado

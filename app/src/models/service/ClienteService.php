@@ -15,8 +15,14 @@ class ClienteService
         return ClienteDao::preparedGet();
     }
 
-    // criação
-    public static function create(array $keyValuesAttributes): int|false
+    // consulta por id
+    public static function getOne(string $id): array
+    {
+        return ClienteDao::preparedGet(filters: ['id_cliente' => $id], limit: 1);
+    }
+
+    // criação e atualização
+    public static function save(array $keyValuesAttributes): string|bool
     {
         // inicializando o resultado
         $result = false;
@@ -30,18 +36,38 @@ class ClienteService
             // instanciando o  dao
             $dao = new ClienteDao($keyValuesAttributes);
 
-            // criando
-            $result = $dao->insert(["id_cliente"]);
-            // se a criação foi bem-sucedida, registra nensagem de sucesso
-            if ($result !== false) {
-                Messages::setMessage("Registro criado  com sucesso!", 1);
+            // se o id não estiver definido, trata-se de criação
+            if ($dao->id_cliente === '' or $dao->id_cliente === null) {
+
+                // criando
+                $result = $dao->insert(["id_cliente"]);
+                // se a criação foi bem-sucedida, registra nensagem de sucesso
+                if ($result !== false) {
+                    Messages::setMessage("Registro criado com sucesso!", 1);
+                    // limpando o array de dados de formulário
+                    // Messages::clearFormData();
+                }
+                // senão, registra nensagem de erro
+                else {
+                    Messages::setMessage("Não foi possível criar o registro.", -1);
+                }
             }
-            // senão, registra nensagem de erro
+            // senão, trata-se de atualização
             else {
-                Messages::setMessage("Não foi possível criar o registro.", -1);
+
+                // atualizando
+                $result = $dao->update('id_cliente');
+                // se a atualização foi bem-sucedida, registra nensagem de sucesso
+                if ($result !== false) {
+                    Messages::setMessage("Registro atualizado com sucesso!", 1);
+                    // limpando o array de dados de formulário
+                    // Messages::clearFormData();
+                }
+                // senão, registra nensagem de erro
+                else {
+                    Messages::setMessage("Não foi possível atualizar o registro.", -1);
+                }
             }
-            // limpando o array de dados de formulário
-            Messages::clearFormData();            
         }
         // se existirem erros na validação
         else {

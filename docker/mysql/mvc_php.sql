@@ -30,30 +30,29 @@ SET time_zone = "+00:00";
 CREATE TABLE `clientes` (
   `id_cliente` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
+  `cep` varchar(12) NOT NULL,
   `endereco` varchar(150) NOT NULL,
+  `complemento` varchar(150),
   `numero` varchar(10) NOT NULL,
   `bairro` varchar(100) NOT NULL,
   `cidade` varchar(80) NOT NULL,
-  `cep` varchar(12) NOT NULL,
-  `complemento` varchar(150) NOT NULL,
-  `ddd` varchar(2) NOT NULL,
+  `uf` varchar(2) NOT NULL,
   `celular` varchar(15) NOT NULL,
-  `sexo` varchar(15) DEFAULT NULL,
-  `data_nascimento` date DEFAULT NULL,
-  `cpf` varchar(15) DEFAULT NULL,
+  `cpf` varchar(15) NOT NULL,
+  `sexo` varchar(15) NOT NULL,
+  `data_nascimento` date NOT NULL,
   `email` varchar(100) NOT NULL,
-  `site` varchar(100) DEFAULT NULL,
-  `data_cadastro` date DEFAULT NULL,
+  `senha` varchar(100) NOT NULL,
   `observacao` text,
-  `uf` varchar(2) DEFAULT NULL
+  `data_cadastro` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Despejando dados para a tabela `clientes`
 --
 
-INSERT INTO `clientes` (`id_cliente`, `nome`, `endereco`, `numero`, `bairro`, `cidade`, `cep`, `complemento`, `ddd`, `celular`, `sexo`, `data_nascimento`, `cpf`, `email`, `site`, `data_cadastro`, `observacao`, `uf`) VALUES
-(1, 'Manoel Jailton Sousa do Nascimento', 'Rua 45', '10', 'Cohama', 'São Luís', '7858544', 'Próximo ao Bar Alcoolizados Anônimos', '98', '9899898', NULL, '2019-12-30', '33716780677', 'mjailton@gmail.com', 'mjailton.com.br', '2019-12-30', '', NULL);
+INSERT INTO `clientes` (`id_cliente`, `nome`, `cep`,`endereco`, `complemento`, `numero`, `bairro`, `cidade`, `uf`, `celular`, `cpf`, `sexo`, `data_nascimento`, `email`, `senha`, `observacao`, `data_cadastro`) VALUES
+(1, 'Manoel Jailton Sousa do Nascimento', '7858544', 'Rua 45', 'Próximo ao Bar Alcoolizados Anônimos', '10', 'Cohama', 'São Luís', 'MA', '9899898', '33716780677', 'M', '1972-12-30', 'mjailton@gmail.com', '$2y$10$/vC1UKrEJQUZLN2iM3U9re/4DQP74sXCOVXlYXe/j9zuv1/MHD4o.', 'observação', '2019-12-30');
 
 -- --------------------------------------------------------
 
