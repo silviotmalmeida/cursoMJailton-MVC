@@ -79,5 +79,11 @@ class ClienteController extends Controller
         }
     }
 
-    public function delete(string $id): void {}
+    public function delete(string $id): void
+    {
+        // excluindo
+        ClienteService::delete($id);
+        // redirecionando para o index
+        $this->redirect(BASE_URL . "cliente/index");
+    }
 }

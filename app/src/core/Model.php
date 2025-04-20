@@ -170,14 +170,14 @@ abstract class Model
     //função que exclui um registro na tabela
     public function delete(string $primaryKey = 'id'): void
     {
-        static::deleteById($this->$primaryKey);
+        static::deleteById($this->$primaryKey, $primaryKey);
     }
 
     //função auxiliar que implementa uma delete query para o id fornecido como atributo
-    public static function deleteById(string $id): void
+    public static function deleteById(string $id, string $primaryKey = 'id'): void
     {
         //contruindo a query
-        $sql = "DELETE FROM " . static::$tableName . " WHERE id = $id";
+        $sql = "DELETE FROM " . static::$tableName . " WHERE $primaryKey = $id";
 
         //executando a query
         Database::executeSQL($sql);
@@ -344,15 +344,24 @@ abstract class Model
         //substituindo a última vírgula pelo parenteses final
         $maskedSql[strlen($maskedSql) - 1] = ')';
 
+        // obtendo o array chave=>valor
+        // e removendo as columas que são de autoincremento
+        $keyValuesArray = $this->getValues();
+        foreach ($autocolumns as $autocolumn) {
+            if (isset($keyValuesArray[$autocolumn])) {
+                unset($keyValuesArray[$autocolumn]);
+            }
+        }
+
         //executando a query e obtendo o id de inserção
-        $id = Database::executePreparedInsertQuery($maskedSql, $this->getValues());
+        $id = Database::executePreparedInsertQuery($maskedSql, $keyValuesArray);
         $this->id = $id;
 
         return $id;
     }
 
     //função que altera um registro na tabela
-    public function preparedUpdate(): void
+    public function preparedUpdate(string $primaryKey = 'id'): int
     {
         //construindo a query a partir das variáveis estáticas da model
         $maskedSql = "UPDATE " . static::$tableName . " SET ";
@@ -363,20 +372,20 @@ abstract class Model
         $maskedSql[strlen($maskedSql) - 1] = ' ';
 
         //inserindo a cláusula where
-        $maskedSql .= "WHERE id = {$this->id}";
+        $maskedSql .= "WHERE $primaryKey = {$this->$primaryKey}";
 
-        //executando a query e obtendo o id de inserção
-        Database::executePreparedUpdateQuery($maskedSql, $this->getValues());
+        //executando a query e obtendo o número de linhas afetadas
+        return Database::executePreparedUpdateQuery($maskedSql, $this->getValues());
     }
 
     //função que exclui um registro na tabela
-    public function preparedDelete(): void
+    public function preparedDelete(string $primaryKey = 'id'): int
     {
         //construindo a query
-        $maskedSql = "DELETE FROM " . static::$tableName . " WHERE id = :id";
+        $maskedSql = "DELETE FROM " . static::$tableName . " WHERE $primaryKey = :$primaryKey";
 
-        //executando a query e obtendo o id de inserção
-        Database::executePreparedDeleteQuery($maskedSql, ["id" => $this->id]);
+        //executando a query e obtendo o número de linhas afetadas
+        return Database::executePreparedDeleteQuery($maskedSql, [$primaryKey => $this->$primaryKey]);
     }
 
     //função auxiliar que implementa uma prepared select query, retornando o resultado

@@ -40,7 +40,7 @@ class ClienteService
             if ($dao->id_cliente === '' or $dao->id_cliente === null) {
 
                 // criando
-                $result = $dao->insert(["id_cliente"]);
+                $result = $dao->preparedInsert(["id_cliente"]);
                 // se a criação foi bem-sucedida, registra nensagem de sucesso
                 if ($result !== false) {
                     Messages::setMessage("Registro criado com sucesso!", 1);
@@ -56,9 +56,9 @@ class ClienteService
             else {
 
                 // atualizando
-                $result = $dao->update('id_cliente');
+                $result = $dao->preparedUpdate('id_cliente');
                 // se a atualização foi bem-sucedida, registra nensagem de sucesso
-                if ($result !== false) {
+                if ($result > 0) {
                     Messages::setMessage("Registro atualizado com sucesso!", 1);
                     // limpando o array de dados de formulário
                     Messages::clearFormData();
@@ -78,5 +78,30 @@ class ClienteService
         }
 
         return $result;
+    }
+
+    // exclusão
+    public static function delete(string $id): void
+    {
+        // obtendo o registro do BD
+        $clienteBD = ClienteService::getOne($id);
+        // se o registro existir,
+        if ($clienteBD != []) {
+            // exclui
+            $result = $clienteBD[0]->preparedDelete('id_cliente');
+
+            // se a exclusão foi bem sucedida, envia mensagem
+            if($result > 0){
+                Messages::setMessage("Registro excluído com sucesso!", 1);
+            }
+            // senão, envia mensagem
+            else{
+                Messages::setMessage("Não foi possível excluir o registro.", -1);
+            }
+        }
+        // senão, envia mensagem
+        else {
+            Messages::setMessage("Não foi possível excluir o registro.", -1);
+        }
     }
 }

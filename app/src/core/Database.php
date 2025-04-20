@@ -166,7 +166,7 @@ abstract class Database
     }
 
     //função que realiza uma alteração
-    public static function executePreparedUpdateQuery(string $maskedSql, array $keyValuesArray): void
+    public static function executePreparedUpdateQuery(string $maskedSql, array $keyValuesArray): int
     {
         //criando a conexão
         $conn = self::getConnection();
@@ -182,6 +182,7 @@ abstract class Database
             }
             // executando a alteração
             $result->execute();
+            return $result->rowCount();
         }
         // em caso de erros, lança exceção
         catch (PDOException $e) {
@@ -195,7 +196,7 @@ abstract class Database
     }
 
     //função que realiza uma exclusão
-    public static function executePreparedDeleteQuery(string $maskedSql, array $keyValuesArray): void
+    public static function executePreparedDeleteQuery(string $maskedSql, array $keyValuesArray): int
     {
         //criando a conexão
         $conn = self::getConnection();
@@ -211,6 +212,7 @@ abstract class Database
             }
             // executando a alteração
             $result->execute();
+            return $result->rowCount();
         }
         // em caso de erros, lança exceção
         catch (PDOException $e) {
