@@ -35,6 +35,18 @@ function excluir(obj){
 	}
 }
 
+// função que exibe um diálogo de confirmação da exclusão
+function deleteDialog(obj){
+	// obtendo o controler e o id a serem considerados
+	var controller  = $(obj).attr('data-controller');
+	var id  = $(obj).attr('data-id');	
+	// criando o diálogo
+	if(confirm('Deseja realmente excluir?')){
+		// redirecionando para a rota
+		window.location.href = base_url + controller +"/delete/" + id;	
+	}
+}
+
 function fecharMsg(obj){	
 	$(".msg").hide();
 }

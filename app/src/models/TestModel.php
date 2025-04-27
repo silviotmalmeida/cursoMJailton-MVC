@@ -8,13 +8,16 @@ use src\core\Model;
 class TestModel extends Model
 {
     //nome da tabela no banco de dados
-    protected static $tableName = 'test';
+    protected static string $tableName = 'test';
 
     //lista de atributos da tabela
-    protected static $columns = [
+    protected static array $columns = [
         'id',
         'name',
         'email',
         'profession',
     ];
+
+    // chave primária da tabela
+    protected static string $primaryKey = 'id';
 }

@@ -8,10 +8,10 @@ use src\core\Model;
 class ClienteDao extends Model
 {
     //nome da tabela no banco de dados
-    protected static $tableName = 'clientes';
+    protected static string $tableName = 'clientes';
 
     //lista de atributos da tabela
-    protected static $columns = [
+    protected static array $columns = [
         'id_cliente',
         'nome',
         'cep',
@@ -30,4 +30,7 @@ class ClienteDao extends Model
         'observacao',
         'data_cadastro',
     ];
+
+    // chave primária da tabela
+    protected static string $primaryKey = 'id_cliente';
 }

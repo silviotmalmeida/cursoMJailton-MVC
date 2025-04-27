@@ -4,8 +4,12 @@
 
 		<div>
 			<div class="text-end d-flex">
+				<!-- botão Cadastrar -->
 				<a href="<?php echo BASE_URL . "cliente/create" ?>" class="btn d-inline-block mb-2 mx-1"><i class="fas fa fa-plus-circle" aria-hidden="true"></i> Cadastrar</a>
+				<!--  -->
+				<!-- botão Filtrar -->
 				<a href="" class="btn btn-roxo d-inline-block mb-2 filtro"><i class="fas fa fa-filter" aria-hidden="true"></i> Filtrar</a>
+				<!--  -->
 			</div>
 		</div>
 		<div class="lst mostraFiltro">
@@ -31,10 +35,15 @@
 				</div>
 			</form>
 		</div>
+		<!--  -->
+		<!-- exibindo as mensagens, caso existam -->
 		<?php $this->includeMessage() ?>
+		<!--  -->
 		<div class="tabela-responsiva">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" id="dataTable">
 				<thead>
+
+					<!-- cabeçalho da tabela -->
 					<tr>
 						<th align="left">ID</th>
 						<th align="left">Nome</th>
@@ -42,9 +51,11 @@
 						<th align="center">Telefone</th>
 						<th align="center">Ação</th>
 					</tr>
+
 				</thead>
 				<tbody>
 
+					<!-- conteúdo da tabela -->
 					<?php foreach ($clientes as $cliente) { ?>
 
 						<tr>
@@ -54,10 +65,9 @@
 							<td align="center"><?php echo $cliente->celular ?></td>
 							<td align="center">
 								<a href=<?php echo BASE_URL . "cliente/update/" . $cliente->id_cliente ?> class="btn btn-verde">Editar</a>
-								<a href=<?php echo BASE_URL . "cliente/delete/" . $cliente->id_cliente ?> class="btn btn-vermelho">Excluir</a>
+								<a href="javascript:;" onclick="deleteDialog(this)" data-controller="cliente" data-id="<?php echo $cliente->id_cliente ?>" class="btn btn-vermelho">Excluir</a>
 							</td>
 						</tr>
-
 
 					<?php } ?>
 

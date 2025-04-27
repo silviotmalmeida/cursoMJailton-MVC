@@ -11,8 +11,9 @@ use src\helper\Helper;
 abstract class Model
 {
     //definição dos atributos a serem detalhados nas classes filhas
-    protected static $tableName = '';
-    protected static $columns = [];
+    protected static string $tableName = '';
+    protected static array $columns = [];
+    protected static string $primaryKey = '';
 
     //método construtor
     function __construct(array $arr, bool $sanitize = true)
@@ -65,6 +66,12 @@ abstract class Model
     {
         //utilização do get mágico para consulta                
         return Helper::objectToArray($this);
+    }
+
+    //função get que retorna a chave primária
+    public static function getPrimaryKey() : string
+    {
+        return static::$primaryKey;
     }
 
     //funcao que realiza uma consulta e retorna objetos populados com os dados da consulta
@@ -138,8 +145,10 @@ abstract class Model
     }
 
     //função que altera um registro na tabela
-    public function update(string $primaryKey = 'id'): bool
+    public function update(): bool
     {
+        $primaryKey = static::$primaryKey;
+
         //construindo a query a partir das variáveis estáticas da model
         $sql = "UPDATE " . static::$tableName . " SET ";
         foreach (static::$columns as $col) {
@@ -149,7 +158,7 @@ abstract class Model
         $sql[strlen($sql) - 1] = ' ';
 
         //inserindo a cláusula where
-        $sql .= "WHERE $primaryKey = {$this->$primaryKey}";
+        $sql .= "WHERE " . $primaryKey . " = " . $this->$primaryKey;
 
         //executando a query
         $result = Database::executeSQL($sql);
@@ -168,16 +177,17 @@ abstract class Model
     // }
 
     //função que exclui um registro na tabela
-    public function delete(string $primaryKey = 'id'): void
+    public function delete(): void
     {
+        $primaryKey = static::$primaryKey;
         static::deleteById($this->$primaryKey, $primaryKey);
     }
 
     //função auxiliar que implementa uma delete query para o id fornecido como atributo
-    public static function deleteById(string $id, string $primaryKey = 'id'): void
+    public static function deleteById(string $id): void
     {
         //contruindo a query
-        $sql = "DELETE FROM " . static::$tableName . " WHERE $primaryKey = $id";
+        $sql = "DELETE FROM " . static::$tableName . " WHERE " . static::$primaryKey . " = $id";
 
         //executando a query
         Database::executeSQL($sql);
@@ -361,7 +371,7 @@ abstract class Model
     }
 
     //função que altera um registro na tabela
-    public function preparedUpdate(string $primaryKey = 'id'): int
+    public function preparedUpdate(): int
     {
         //construindo a query a partir das variáveis estáticas da model
         $maskedSql = "UPDATE " . static::$tableName . " SET ";
@@ -372,17 +382,19 @@ abstract class Model
         $maskedSql[strlen($maskedSql) - 1] = ' ';
 
         //inserindo a cláusula where
-        $maskedSql .= "WHERE $primaryKey = {$this->$primaryKey}";
+        $maskedSql .= "WHERE " . static::$primaryKey . " = :" . static::$primaryKey;
 
         //executando a query e obtendo o número de linhas afetadas
         return Database::executePreparedUpdateQuery($maskedSql, $this->getValues());
     }
 
     //função que exclui um registro na tabela
-    public function preparedDelete(string $primaryKey = 'id'): int
+    public function preparedDelete(): int
     {
+        $primaryKey = static::$primaryKey;
+        
         //construindo a query
-        $maskedSql = "DELETE FROM " . static::$tableName . " WHERE $primaryKey = :$primaryKey";
+        $maskedSql = "DELETE FROM " . static::$tableName . " WHERE " . $primaryKey . " = :" . $primaryKey;
 
         //executando a query e obtendo o número de linhas afetadas
         return Database::executePreparedDeleteQuery($maskedSql, [$primaryKey => $this->$primaryKey]);
