@@ -31,10 +31,10 @@
 
 	<?php include_once 'rodape.php'; ?>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="https://kit.fontawesome.com/9480317a2f.js"></script>
+	<!-- <script src="https://kit.fontawesome.com/9480317a2f.js"></script> -->
 	<script src="<?php echo BASE_URL ?>assets/js/datatables/js/jquery.dataTables.min.js"></script>
 	<script src="<?php echo BASE_URL ?>assets/js/datatables/js/dataTables.responsive.min.js"></script>
-	<script src="<?php echo BASE_URL ?>assets/js/componentes/js_data_table.js"></script>
+	<script src="<?php echo BASE_URL ?>assets/js/components/js_data_table.js"></script>
 	<script src="<?php echo BASE_URL ?>assets/js/js.js"></script>
 
 </body>
